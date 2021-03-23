@@ -1,6 +1,6 @@
-import Head from 'next/head'
+import Head from "next/head";
 
-export default function Home() {
+export default function Home({ host }) {
   return (
     <div className="container">
       <Head>
@@ -10,6 +10,7 @@ export default function Home() {
 
       <main>
         <h1 className="title">
+          Hi {host}
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
@@ -54,7 +55,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
         </a>
       </footer>
@@ -205,5 +206,18 @@ export default function Home() {
         }
       `}</style>
     </div>
-  )
+  );
+}
+
+export async function getServerSideProps({ req, res }) {
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=1, stale-while-revalidate=59"
+  );
+
+  return {
+    props: {
+      host: req.headers.host,
+    },
+  };
 }
