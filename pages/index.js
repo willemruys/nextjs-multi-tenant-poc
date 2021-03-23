@@ -1,6 +1,7 @@
 import Head from "next/head";
 
 export default function Home({ host }) {
+  const subDomain = host.split(".")[0];
   return (
     <div className="container">
       <Head>
@@ -9,10 +10,7 @@ export default function Home({ host }) {
       </Head>
 
       <main>
-        <h1 className="title">
-          Hi {host}
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <h1 className="title">Hi {subDomain}</h1>
 
         <p className="description">
           Get started by editing <code>pages/index.js</code>
@@ -68,6 +66,7 @@ export default function Home({ host }) {
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          background-color: ${subDomain};
         }
 
         main {
