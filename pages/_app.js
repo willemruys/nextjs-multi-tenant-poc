@@ -34,7 +34,11 @@ function App({ Component, pageProps }) {
   };
 
   return (
-    <ThemeProvider theme={themes[pageProps.theme]}>
+    <ThemeProvider
+      theme={
+        pageProps && pageProps.theme ? themes[pageProps.theme] : themes.basic
+      }
+    >
       <GlobalStyles />
       <Component {...pageProps} />
     </ThemeProvider>
@@ -46,17 +50,44 @@ App.getInitialProps = async ({ Component, ctx }) => {
   if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx);
   }
+  let tenant;
 
-  const tenant = ctx.req.rawHeaders[1].split(".")[0];
+  if (ctx && ctx.req && ctx.req.host) {
+    tenant = ctx.req.host.split(".")[0];
+  }
+
+  if (!tenant) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/500",
+      },
+    };
+  }
 
   const tenantData = await getTenantData(tenant);
+
+  if (!tenantData) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/500",
+      },
+    };
+  }
   const theme =
     tenantData && tenantData.styling && tenantData.styling.colorPalette
       ? tenantData.styling.colorPalette
       : "darkTheme";
 
-  pageProps.tenant = tenant;
-  pageProps.theme = theme;
+  if (theme) {
+    pageProps.theme = theme;
+  }
+
+  if (tenant) {
+    pageProps.tenant = tenant;
+  }
+
   return {
     pageProps: {
       ...pageProps,
