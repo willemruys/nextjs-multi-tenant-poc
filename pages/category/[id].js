@@ -1,6 +1,6 @@
 import { getCategory } from "../../services/categories";
 
-export default function Category({ categoryData }) {
+export default function Category({ categoryData, error }) {
   if (error) {
     return <p>Tenant not found</p>;
   }
