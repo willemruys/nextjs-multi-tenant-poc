@@ -1,6 +1,7 @@
 import React from "react";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
-export default function Layout({ children, host }) {
+
+export default function Layout({ children, tenant }) {
   const lightTheme = {
     body: "#FFF",
     text: "#363537",
@@ -16,7 +17,8 @@ export default function Layout({ children, host }) {
   };
 
   let activeTheme = lightTheme;
-  if (host.split(".")[0] === "dark") {
+
+  if (tenant === "local1") {
     activeTheme = darkTheme;
   }
 
